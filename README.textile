@@ -1,5 +1,9 @@
 h1. AutoExcerpt
 
+This gem is available via gemcutter, so make sure you have http://gemcutter.org in you @gem sources@
+
+pre. [sudo] gem install auto_excerpt
+
 Creates Automatic excerpts of html formatted text.
 
 pre. AutoExcerpt.new("<span>This is <strong>some</strong> fancy html formatted text homie</span>", {:words => 5}) 
