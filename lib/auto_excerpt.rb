@@ -9,9 +9,7 @@ class String
 end
 
 # TODO allow for default options to be set.
-class AutoExcerpt < String
-  VERSION = '0.6'
-  
+class AutoExcerpt < String  
   DEFAULTS = {
      :characters => 0,
      :words => 0,
@@ -34,9 +32,17 @@ class AutoExcerpt < String
 
   # @param [String] text The text to be excerpted
   # @param [Hash] settings The settings for creating the excerpt
-  # @option settings [Integer] :characters (0)
-  # 
-  # 
+  # @option settings [Integer] :characters (0) The number of characters to limit the html by
+  # @option settings [Integer] :words (0) The number of words to limit the html by
+  # @option settings [Integer] :sentences (0) The number of sentences to limit the html by
+  # @option settings [Integer] :paragraphs (0) The number of paragraphs to limit the html by
+  # @option settings [Integer] :skip_characters (0) The number of characters to skip from the start of the html
+  # @option settings [Integer] :skip_words (0) The number of words to skip from the start of the html
+  # @option settings [Integer] :skip_sentences (0) The number of sentences to skip from the start of the html
+  # @option settings [Integer] :skip_paragraphs (0) The number of paragraphs to skip from the start of the html
+  # @option settings [String] :ending ('...') A string added to the end of the excerpt
+  # @option settings [Boolean] :strip_html (false) Strip all HTML from the text before creating the excerpt
+  # @option settings [Boolean] :strip_paragraphs (false) Strip all <p> tags from the HTML before creating the excerpt
   def initialize(text, settings = {})
     @settings = DEFAULTS.dup.merge(settings)
     
