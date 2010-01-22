@@ -11,6 +11,9 @@ begin
     gemspec.email = "kabari@gmail.com"
     gemspec.homepage = "http://github.com/kabari/auto_excerpt"
     gemspec.authors = ["Kabari Hendrick"]
+    
+    gemspec.add_development_dependency "rspec", ">= 1.2.9"
+    gemspec.add_development_dependency "yard", ">= 0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
