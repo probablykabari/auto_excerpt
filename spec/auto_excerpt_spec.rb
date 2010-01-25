@@ -1,9 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
-# require File.join(File.dirname(__FILE__), "shared_strip_tags")
+require File.join(File.dirname(__FILE__), "shared_strip_tags")
 
 # I definitely need more tests
 describe AutoExcerpt do
   include AutoExcerptHelpers
+  
+  before(:all) do
+    @html = "foo < BAR> <><a href=\"www.beer.com\">xyzzy</a>>><br /><p><br/><p><br///><p></><br ///><p></br><p></ br> <cheeky"
+  end
   
  it "should limit characters" do
    text = html_excerpt({:characters => 5})
@@ -15,7 +19,7 @@ describe AutoExcerpt do
  
  it "should default to 150 characters" do
    text = html_excerpt
-   text.length.should be_close(150, 4)   
+   text.length.should be_close(150, 4)
  end
  
  it "should limit words" do
@@ -39,9 +43,12 @@ describe AutoExcerpt do
  it "should limit paragraphs" do
    text = html_excerpt({:paragraphs => 1})
    stripped_text(text).split("</p>").length.should eql(1)
+ end
+
+ it "should not include the :ending when limited by paragraph" do
+   text = html_excerpt({:paragraphs => 1})
    stripped_text(text).split("</p>").last[-3..-1].should_not == '...'
  end
-     
  
  it "should close the effin B tag" do
    t = %{
@@ -57,5 +64,5 @@ describe AutoExcerpt do
    text.match(/(<(\/|)b>)/).captures.length.should eql(2)
  end
  
- # it_should_behave_like "HTML stripper"
+ it_should_behave_like "an HTML stripper"
 end
