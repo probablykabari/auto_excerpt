@@ -20,13 +20,12 @@ class AutoExcerpt < String
      :skip_sentences => 0,
      :skip_paragraphs => 0,
      :ending => '...',
-     :strip_html => false, #:allowed_tags => [],
+     :strip_html => false, :allowed_tags => [],
      :strip_breaks_tabs => false,
      :strip_paragraphs => false
   }.freeze
   
   # TODO add and allowwed tags option
-  HTMLTAGS = /<(.|\n)+?>/
   PUNCTUATION_MARKS = /\!\s|\.\s|\?\s/
   NO_CLOSE = %w( br hr img input ) # tags that do not have opposite closing tags
 
@@ -49,13 +48,14 @@ class AutoExcerpt < String
     # make our copy
     @body = text.dup.strip
     @excerpt = ""
-    @body.gsub!(HTMLTAGS, "") if @settings[:strip_html]
+    # @body.gsub!(HTMLTAGS, "") if @settings[:strip_html]
+    @body = strip_html(@body) if @settings[:strip_html]
     @body.clean! if @settings[:strip_breaks_tabs]
     # TODO replace this with better regex
     @body.replace(@body.gsub(/<(\/|)p>/,'')) if @settings[:strip_paragraphs]
     # @charcount = @body.gsub(HTMLTAGS, "").length
     @charcount = @body.length
-    @wordcount = @body.gsub(HTMLTAGS, "").scan(/\w+/).size
+    @wordcount = strip_html(@body).scan(/\w+/).size
     @sencount  = @body.split(PUNCTUATION_MARKS).size
     @pghcount  = @body.split("</p>").size
     @settings[:characters] = 150 if @settings.values_at(:characters, :words, :sentences, :paragraphs).all?{|val| val.zero?  }
@@ -72,26 +72,30 @@ class AutoExcerpt < String
  # close html tags
  # TODO make this work with new strip_html method. Improve regex
   def close_tags(text)
-    tagstoclose = ""
-    tags = []
-    opentags = text.scan( /<(([A-Z]|[a-z]).*?)(( )|(>))/is ).transpose[0] || []
-    opentags.reverse!
-    closedtags = text.scan(/<\/(([A-Z]|[a-z]).*?)(( )|(>))/is).transpose[0] || []
+    # Don't bother closing tags if html is stripped since there are no tags.
+    if @settings[:strip_html]
+      tagstoclose = nil
+    else
+      tagstoclose = ""
+      tags = []
+      opentags = text.scan( /<(([A-Z]|[a-z]).*?)(( )|(>))/is ).transpose[0] || []
+      opentags.reverse!
+      closedtags = text.scan(/<\/(([A-Z]|[a-z]).*?)(( )|(>))/is).transpose[0] || []
   
-    opentags.each do |ot|
-      if closedtags.include?(ot)
-        closedtags.delete_at(closedtags.index(ot))
-      else
-        tags << ot
+      opentags.each do |ot|
+        if closedtags.include?(ot)
+          closedtags.delete_at(closedtags.index(ot))
+        else
+          tags << ot
+        end
       end
+    
+      tags.each do |tag|
+        tagstoclose << "</#{tag.strip.downcase}>" unless NO_CLOSE.include?(tag)
+      end      
     end
     
-    tags.each do |tag|
-      tagstoclose << "</#{tag.strip.downcase}>" unless NO_CLOSE.include?(tag)
-    end
-    
-    text << (@settings[:ending] || "") + tagstoclose
-    @excerpt = text
+    @excerpt = [text, @settings[:ending], tagstoclose].compact.join
   end
     
   def create_excerpt #:nodoc:
@@ -141,17 +145,17 @@ class AutoExcerpt < String
   
   # Removes HTML tags from a string. Allows you to specify some tags to be kept.
   # @see http://codesnippets.joyent.com/posts/show/1354#comment-293
-  # def strip_html(html)    
-  #   reg = if @settings[:allowed_tags].any?
-  #     Regexp.new(
-  #       %(<(?!(\\s|\\/)*(#{
-  #         @settings[:allowed_tags].map {|tag| Regexp.escape( tag )}.join( "|" )
-  #       })( |>|\\/|'|"|<|\\s*\\z))[^>]*(>+|\\s*\\z)),
-  #       Regexp::IGNORECASE | Regexp::MULTILINE, 'u'
-  #     )
-  #   else
-  #     /<[^>]*(>+|\s*\z)/m
-  #   end
-  #   html.gsub(reg,'')
-  # end
+  def strip_html(html)    
+    reg = if @settings[:allowed_tags].any?
+      Regexp.new(
+        %(<(?!(\\s|\\/)*(#{
+          @settings[:allowed_tags].map {|tag| Regexp.escape( tag )}.join( "|" )
+        })( |>|\\/|'|"|<|\\s*\\z))[^>]*(>+|\\s*\\z)),
+        Regexp::IGNORECASE | Regexp::MULTILINE, 'u'
+      )
+    else
+      /<[^>]*(>+|\s*\z)/m
+    end
+    html.gsub(reg,'')
+  end
 end
