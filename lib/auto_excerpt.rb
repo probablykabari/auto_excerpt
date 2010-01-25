@@ -73,7 +73,7 @@ class AutoExcerpt < String
  # TODO make this work with new strip_html method. Improve regex
   def close_tags(text)
     # Don't bother closing tags if html is stripped since there are no tags.
-    if @settings[:strip_html]
+    if @settings[:strip_html] #&& @settings[:allowed_tags].empty?
       tagstoclose = nil
     else
       tagstoclose = ""
@@ -98,7 +98,7 @@ class AutoExcerpt < String
     @excerpt = [text, @settings[:ending], tagstoclose].compact.join
   end
     
-  def create_excerpt #:nodoc:
+  def create_excerpt
     return characters unless @settings[:characters].zero?
     return words      unless @settings[:words].zero?
     return sentences  unless @settings[:sentences].zero?
@@ -138,14 +138,13 @@ class AutoExcerpt < String
     return non_excerpted_text if @pghcount < @settings[:paragraphs]
     text = @body.split("</p>").slice(@settings[:skip_paragraphs], @settings[:paragraphs])
     @settings[:ending] = nil
-    # text.last.replace(text.last.rstrip.concat(@settings.delete(:ending)))
     text = text.join("</p>")
     close_tags(text)
   end
   
   # Removes HTML tags from a string. Allows you to specify some tags to be kept.
   # @see http://codesnippets.joyent.com/posts/show/1354#comment-293
-  def strip_html(html)    
+  def strip_html(html)
     reg = if @settings[:allowed_tags].any?
       Regexp.new(
         %(<(?!(\\s|\\/)*(#{
