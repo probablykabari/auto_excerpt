@@ -1,2 +1,8 @@
-== 0.6.2
+== 0.6.3 (2010-01-26)
+  * Removed limit by :characters for the time being
+  * Improved limit by characters to be more accurate
+  * Changed method of stripping HTML
+  * Changed Regexp used for closing unclosed HTML tags
+  
+== 0.6.2 (2010-01-20)
   * Original cleanup of what was already written and turning it into a gem.

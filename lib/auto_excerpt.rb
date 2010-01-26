@@ -129,6 +129,10 @@ class AutoExcerpt < String
         html_count += piece.length
       else
         chars_left = @settings[:characters] - char_count
+        # TODO don't clip the middle of a word
+        # unless piece[0...(chars_left+1)] =~ /(\s|\W)$/
+        #   chars_left += 1 until piece[0...chars_left] =~ /(\s|\W)$/
+        # end
         char_count += piece[0...chars_left].length
       end
       break if (char_count >= @settings[:characters])
@@ -147,6 +151,7 @@ class AutoExcerpt < String
   # limit by sentences
   def sentences
     return non_excerpted_text if @sencount < @settings[:sentences]
+    # TODO don't change punctuation
     text = @body.split(PUNCTUATION_MARKS).slice(@settings[:skip_sentences], @settings[:sentences]).join(". ")
     close_tags(text)
   end

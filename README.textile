@@ -10,37 +10,42 @@ pre. AutoExcerpt.new("<span>This is <strong>some</strong> fancy html formatted t
 h3. Features
 
   * There are 4 different ways to limit the length of an excerpt: *characters*, *words*, *sentences*, *paragraphs*
-  * If limiting by *characters*, the gem will ensure that the excerpt does not cutoff in the middle of a word. If the excerpt would be shorter than the limit that is set, the entire text will be shown.
+  * If the excerpt would be shorter than the limit that is set, the entire text will be shown.
   * HTML can be stripped
   * HTML tags are automatically closed.
 
 h3. Options
 
-*:characters*
+@:characters@
 The number of characters to display from the text.
 Default: 150 (does not need to be reset to 0 if you choose another option)
 
-*:words*, *:sentences*, *:paragraphs*
+If you need to be 100% accurate in your character count, then remove the @:ending@
+
+pre. AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}) 
+     # => <h1>Hello</h1>
+
+@:words@, @:sentences@, @:paragraphs@
 The number of [which] to display from the text.
 
-*:ending*
+@:ending@
 The text that will be displayed at the end of the excerpt when generating the excerpt by length or words. Set to @nil@ if you don't want it.
 Default: "..."
 
 pre. AutoExcerpt.new("This is cool stuff man!", :ending => ". Srsly!", :words => 3)
     # => "This is cool. Srsly!"
     
-*:strip_html*
+@:strip_html@
 Strips HTML tags from the excerpt that is displayed.
 Default: false
 
-*:strip_paragraphs*
+@:strip_paragraphs@
 Strip all paragraph tags from the html.
 Default: false
 
-*:skip_characters*, *:skip_words*, *:skip_sentences*, *:skip_paragraphs*
+@:skip_words@, @:skip_sentences@, @:skip_paragraphs@
 The number of [which] to skip at the beginning of the html when returned.
-Default 0
+Default: 0
 
 h2. Help out on Github!
 

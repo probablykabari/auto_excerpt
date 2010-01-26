@@ -21,6 +21,12 @@ describe AutoExcerpt do
     AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}).should == "<h1>Hello</h1>"
   end
   
+  it "should not cutoff in the middle of a word" do
+    pending("this does not work yet") do
+      AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 4, :ending => nil}).should == "<h1>Hello</h1>"
+    end
+  end
+  
   it "should limit words" do
    text = html_excerpt({:words => 5})
    stripped_text(text).split(" ").length.should eql(5)
