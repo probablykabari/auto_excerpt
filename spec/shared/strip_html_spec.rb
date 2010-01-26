@@ -1,4 +1,9 @@
 describe "an HTML stripper", :shared => true do
+  
+  before(:all) do
+    @html = "foo < BAR> <><a href=\"www.beer.com\">xyzzy</a>>><br /><p><br/><p><br///><p></><br ///><p></br><p></ br> <cheeky"
+    
+  end
   it "should strip html tags" do
     AutoExcerpt.new(@html, {:strip_html => true}).should == "foo  xyzzy "
   end
@@ -27,6 +32,7 @@ describe "an HTML stripper", :shared => true do
   it "should know the difference between a tag called a and one called alpha" do
     difference_test = "passed<alpha> the test"
     AutoExcerpt.new(difference_test, {:strip_html => true, :allowed_tags => %w(a) }).should == "passed the test"
-    AutoExcerpt.new(difference_test, {:strip_html => true, :allowed_tags => %w(alpha) }).should == difference_test
+    AutoExcerpt.new(difference_test, {:strip_html => true, :allowed_tags => %w(alpha) }).should == "passed<alpha> the test</alpha>"
   end
+  
 end

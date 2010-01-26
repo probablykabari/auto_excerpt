@@ -1,12 +1,22 @@
 require "rubygems"
 require "spec"
-require File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt])
+require "pp"
+require "webrick/htmlutils"
 
-Spec::Runner.configure do |config|
-  
+Object.class_eval do
+  alias_method :old_pp, :pp
+
+  def pp(str)
+    str = WEBrick::HTMLUtils.escape(str) if str.is_a?(String)
+    old_pp(str)
+  end
 end
 
+require File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt])
+
 module AutoExcerptHelpers
+  
+  
   def html_excerpt(opts = {})
    AutoExcerpt.new(HTML_BLOCK, opts)
   end
@@ -20,8 +30,10 @@ module AutoExcerptHelpers
   end
 
   def stripped_text(t)
-   t.gsub(AutoExcerpt::HTMLTAGS, "")
+   t.gsub(/<[^>]*(>+|\s*\z)/m, "")
   end
+    
+  CRAP_HTML = ""
   
   NORMAL_TEXT = %{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     
@@ -43,4 +55,8 @@ module AutoExcerptHelpers
 
   	<p>Use the validation tool on your basic style sheets if your having a hard time figuring out what may be causing an issue. At this stage in development they are helpful tools for just that. By no means should you be running them as the final judge on your styles, or checking everyone else&rsquo;s sites to &lsquo;see if it validates&rsquo; so you can feel all professional, or posting the &lsquo;valid CSS&rsquo; emblem at the bottom of your web pages like it&rsquo;s a flag on the moon.</p>
   }
+end
+
+Spec::Runner.configure do |config|
+  config.include AutoExcerptHelpers
 end
