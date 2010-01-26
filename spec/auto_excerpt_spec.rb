@@ -5,22 +5,22 @@ require File.join(File.dirname(__FILE__), *%w[shared strip_html_spec])
 describe AutoExcerpt do
   
   it "should limit characters" do
-   text = html_excerpt({:characters => 5})
+   text = html_excerpt({:characters => 5, :ending => nil})
    stripped_text(text).length.should eql(5)
  
-   text = heavy_excerpt({:characters => 5})
+   text = heavy_excerpt({:characters => 5, :ending => nil})
    stripped_text(text).length.should eql(5)
   end
 
   it "should default to 150 characters" do
-   text = html_excerpt
+   text = html_excerpt(:ending => nil)
    stripped_text(text).length.should eql(150)
   end
 
   it "does not include html tags in character count" do
-    AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5}).should == "<h1>Hello</h1>"
+    AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}).should == "<h1>Hello</h1>"
   end
-
+  
   it "should limit words" do
    text = html_excerpt({:words => 5})
    stripped_text(text).split(" ").length.should eql(5)
@@ -63,11 +63,13 @@ describe AutoExcerpt do
    text.match(/(<(\/|)b>)/).captures.length.should eql(2)
   end
 
-  it "should not care about incomplete tags" do
-    pending("needs to be written") do
-     AutoExcerpt.new("<>").should == "Hello"
-   end
-  end
- 
+end
+
+describe AutoExcerpt, "when stripping HTML" do
+  
   it_should_behave_like "an HTML stripper"
+  
+  it "should not strip P tags if :paragraphs option is set" do
+    AutoExcerpt.new("<p>this is a paragraph.</p><p>this is also a paragraph.</p>",{:paragraphs => 1, :strip_html => true}).should eql("<p>this is a paragraph.</p>")
+  end
 end

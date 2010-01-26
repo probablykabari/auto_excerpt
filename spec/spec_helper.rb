@@ -1,8 +1,22 @@
 require "rubygems"
 require "spec"
+require "pp"
+require "webrick/htmlutils"
+
+Object.class_eval do
+  alias_method :old_pp, :pp
+
+  def pp(str)
+    str = WEBrick::HTMLUtils.escape(str) if str.is_a?(String)
+    old_pp(str)
+  end
+end
+
 require File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt])
 
 module AutoExcerptHelpers
+  
+  
   def html_excerpt(opts = {})
    AutoExcerpt.new(HTML_BLOCK, opts)
   end
@@ -18,10 +32,8 @@ module AutoExcerptHelpers
   def stripped_text(t)
    t.gsub(/<[^>]*(>+|\s*\z)/m, "")
   end
-  
-  CRAP_HTML = "foo < BAR> <><a href=\"www.beer.com\">xyzzy</a>>><br /><p><br/><p><br///><p></><br ///><p></br><p></ br> <cheeky"
-  
-  MORE_CRAP_HTML = ""
+    
+  CRAP_HTML = ""
   
   NORMAL_TEXT = %{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     
