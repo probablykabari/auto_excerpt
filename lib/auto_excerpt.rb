@@ -168,6 +168,7 @@ class AutoExcerpt < String
   # Removes HTML tags from a string. Allows you to specify some tags to be kept.
   # @see http://codesnippets.joyent.com/posts/show/1354#comment-293
   def strip_html(html)
+    return @stripped_html if @stripped_html
     allowed = @settings[:allowed_tags]
     reg = if allowed.any?
       Regexp.new(
@@ -179,6 +180,6 @@ class AutoExcerpt < String
     else
       /<[^>]*(>+|\s*\z)/m
     end
-     @stripped_html ||= html.gsub(reg,'')
+     @stripped_html = html.gsub(reg,'')
   end
 end
