@@ -1,4 +1,4 @@
-== 0.6.4 (2010-01-31)
+== 0.7.0 (2010-01-31)
   * Changed AutoExcerpt from a Class to a Module in order to return a String object when used
   * Removed String#clean
   * Limiting by :characters does not break off in the middle of words
