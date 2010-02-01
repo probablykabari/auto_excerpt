@@ -1,4 +1,4 @@
-require "auto_excerpt/parser"
+require File.join(File.dirname(__FILE__), *%w[auto_excerpt parser])
 
 module AutoExcerpt
   def self.new(text, options = {})
