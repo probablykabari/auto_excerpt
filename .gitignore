@@ -3,3 +3,4 @@
 extra
 *.gemspec
 pkg
+benchmark*.txt
