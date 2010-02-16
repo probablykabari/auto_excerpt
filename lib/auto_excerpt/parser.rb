@@ -2,25 +2,26 @@ module AutoExcerpt
   # TODO allow for default options to be set.
   class Parser  
     DEFAULTS = {
-       :characters => 0,
-       :words => 0,
-       :sentences => 0, 
-       :paragraphs => 0,
+       :characters        => 0,
+       :words             => 0,
+       :sentences         => 0, 
+       :paragraphs        => 0,
        # :skip_characters => 0,
-       :skip_words => 0,
-       :skip_sentences => 0,
-       :skip_paragraphs => 0,
-       :ending => '...',
-       :strip_html => false, :allowed_tags => [],
+       :skip_words        => 0,
+       :skip_sentences    => 0,
+       :skip_paragraphs   => 0,
+       :ending            => '...',
+       :strip_html        => false, 
+       :allowed_tags      => [],
        :strip_breaks_tabs => false,
-       :strip_paragraphs => false
+       :strip_paragraphs  => false
     }
 
-    # TODO add and allowwed tags option
     PUNCTUATION_MARKS = /\!\s|\.\s|\?\s/
-    NO_CLOSE = %w( br hr img input ) # tags that do not have opposite closing tags
-    OPENING_TAG = /<([a-z0-9]{1,})\b[^>]*>/im
-    CLOSING_TAG = /<\/([a-z0-9]{1,})>/im
+    # tags that do not have opposite closing tags
+    NO_CLOSE          = %w( br hr img input ) 
+    OPENING_TAG       = /<([a-z0-9]{1,})\b[^>]*>/im
+    CLOSING_TAG       = /<\/([a-z0-9]{1,})>/im
 
     # @param [String] text The text to be excerpted
     # @param [Hash] settings The settings for creating the excerpt
@@ -39,7 +40,7 @@ module AutoExcerpt
       @settings = Marshal.load(Marshal.dump(DEFAULTS)).merge(settings)
 
       # make our copy
-      @body = text.dup.strip
+      @body    = text.dup.strip
       @excerpt = ""
 
       if @settings[:strip_html]
@@ -49,10 +50,10 @@ module AutoExcerpt
       @body = clean(@body) if @settings[:strip_breaks_tabs]
       # TODO replace this with better regex
       @body.replace(@body.gsub(/<(\/|)p>/,'')) if @settings[:strip_paragraphs]
-      @charcount = strip_html(@body).length
-      @wordcount = strip_html(@body).scan(/\w+/).size
-      @sencount  = @body.split(PUNCTUATION_MARKS).size
-      @pghcount  = @body.split("</p>").size
+      @charcount             = strip_html(@body).length
+      @wordcount             = strip_html(@body).scan(/\w+/).size
+      @sencount              = @body.split(PUNCTUATION_MARKS).size
+      @pghcount              = @body.split("</p>").size
       @settings[:characters] = 150 if @settings.values_at(:characters, :words, :sentences, :paragraphs).all?{|val| val.zero? || val.nil?  }
     end
 
@@ -70,8 +71,7 @@ module AutoExcerpt
     attr_reader :charcount, :wordcount, :sencount, :pghcount
     attr_accessor :settings, :body, :excerpt
 
-   # close html tags
-   # TODO make this work with new strip_html method. Improve regex
+    # close html tags
     def close_tags(text)
       # Don't bother closing tags if html is stripped since there are no tags.
       if @settings[:strip_html] && @settings[:allowed_tags].empty?
