@@ -17,6 +17,7 @@
     #container {
       margin: 0 auto;
       width: 700px;
+      padding:6px;
     }
 		h1 { font-size: 3.8em; color: #237ed4; margin-bottom: 3px; }
 		h1 .small { font-size: 0.4em; }
@@ -29,14 +30,54 @@
 		pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    
+    .version0 {
+      background-color: #fff;
+      font-family: Arial, "MS Trebuchet", sans-serif;
+    }
+    .version1{
+      font-family: Georgia, Times, serif;
+    }
+    .version1 a, .version1 h2, .version1 h3{ color: #C29CFF;}
+    
+    .version2{
+      background-color:#FFC043;
+    }
 	</style>
-	
+	<!-- Google Website Optimizer Control Script -->
+  <script type="text/javascript" charset="utf-8">
+  function utmx_section(){}function utmx(){}
+  (function(){var k='4115148577',d=document,l=d.location,c=d.cookie;function f(n){
+  if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.indexOf(';',i);return c.substring(i+n.
+  length+1,j<0?c.length:j)}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;
+  d.write('<sc'+'ript src="'+
+  'http'+(l.protocol=='https:'?'s://ssl':'://www')+'.google-analytics.com'
+  +'/siteopt.js?v=1&utmxkey='+k+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='
+  +new Date().valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+  '" type="text/javascript" charset="utf-8"></sc'+'ript>')})();
+  </script>
+  <!-- End of Google Website Optimizer Control Script -->
+  <!-- Google Website Optimizer Tracking Script -->
+  <script type="text/javascript" charset="utf-8">
+    if(typeof(_gat)!='object')document.write('<sc'+'ript src="http'+
+    (document.location.protocol=='https:'?'s://ssl':'://www')+
+    '.google-analytics.com/ga.js"></sc'+'ript>')</script>
+    <script type="text/javascript">
+    try {
+    var gwoTracker=_gat._getTracker("UA-7977021-4");
+    gwoTracker._trackPageview("/4115148577/test");
+    }catch(err){}
+  </script>
+    <!-- End of Google Website Optimizer Tracking Script -->
+  
 </head>
 
 <body>
+  <!-- utmx section name="container" -->
+  
   <a href="http://github.com/kabari/auto_excerpt"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
   
-  <div id="container">
+  <div id="container" class="version0">
 
     <div class="download">
       <a href="http://github.com/kabari/auto_excerpt/zipball/master">
@@ -50,6 +91,7 @@
 
     <div class="description">
       Ruby gem to generate excerpts from html formatted text. Great for blogs.
+      <a href="examples.html">See examples here.</a>
     </div>
 
     <h2>Install</h2>
@@ -77,9 +119,12 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </p>
 <h2>Authors</h2>
-<p>Kabari Hendrick (kabari@gmail.com)<br/><br/>      </p>
+<p>Kabari Hendrick (kabari@gmail.com)
+<br/>
+<br/>      </p>
 <h2>Contact</h2>
-<p>Kabari Hendrick (kabari@gmail.com)<br/>      </p>
+<p>Kabari Hendrick (kabari@gmail.com)
+<br/>      </p>
 
 
     <h2>Download</h2>
@@ -90,8 +135,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </p>
     <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
       by running:
-      <pre>$ git clone git://github.com/kabari/auto_excerpt</pre>
     </p>
+    <pre>$ git clone git://github.com/kabari/auto_excerpt</pre>
       
     <div class="footer">
       get the source code on GitHub : <a href="http://github.com/kabari/auto_excerpt">kabari/auto_excerpt</a>
@@ -99,6 +144,74 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
   </div>
 
+ <script src="js/mootools-core.js" type="text/javascript" charset="utf-8"></script>
+ <script src="js/mootools-more.js" type="text/javascript" charset="utf-8"></script>
+ 
+ 
+  <script type="text/javascript" charset="utf-8">
+    var v = null;
+    if ($defined(utmx)) {
+      var v = utmx("variation_number", "container");
+      if ($type(v) == 'number') {
+        // do stuff for content change
+        $("container").className = 'version' + v;
+      };
+    };
+  </script>
   
+  <script type="text/javascript" charset="utf-8">
+    var GWOConsole = new Class({
+      initialize: function(){
+       if (Cookie.read("__utmx")) {
+         this.getVersion();
+         this.build();
+       }; 
+      },
+      build: function(){
+       var container = new Element("div", {'id':'gwo_console',
+       'styles':{
+         'position': 'absolute',
+         'background-color': '#000',
+         'opacity': .7,
+         'padding': '6px',
+         'margin': '1px'
+       }
+       });
+       var headline = new Element("strong",{'text': "Current Test: " + this.version, 'styles':{'color': '#fff', 'font-size':'.8em'}});
+       var form = new Element('form', {
+         'action': '#',
+        'events': {
+          'submit': function(e) {
+            e.stop();
+            var change_to = $("gwo_version_num").get('value');
+            var cur_cookie = Cookie.read("__utmx");
+            var new_cookie = cur_cookie.replace(/(\d+)$/, change_to);
+            Cookie.write("__utmx", new_cookie, {duration: false});
+            window.location.reload();
+          }
+        }
+       });
+       var input = new Element('input', {'type': 'text', 'id': 'gwo_version_num',
+        'styles':{
+          'width': 120
+        },
+        'title': 'Version to Change to'
+       });
+       
+       // new OverText('gwo_version_num');
+       form.adopt(input);
+       container.adopt(headline, form);
+       container.inject(document.body, 'bottom');
+       container.position({position: 'topLeft'});
+       container.pin();
+      },
+      getVersion: function(){
+       var version = utmx("variation_number", "container");
+       this.version = ($type(version) == 'number') ? version : 0;
+      }
+    });
+    
+    new GWOConsole();
+  </script>
 </body>
 </html>
