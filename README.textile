@@ -55,6 +55,11 @@ Default: false
 The number of [which] to skip at the beginning of the html when returned.
 Default: 0
 
+h3. Command Line
+
+*new: v0.7.1* Run @auto_excerpt@ from the command line with all of the options shown above!
+@$ auto_excerpt --words 10 "<p>Some html string</p>"@
+
 h2. Help out on Github!
 
 * Fork the project.
