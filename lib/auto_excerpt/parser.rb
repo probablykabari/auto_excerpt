@@ -37,6 +37,7 @@ module AutoExcerpt
     # @option settings [Boolean] :strip_html (false) Strip all HTML from the text before creating the excerpt
     # @option settings [Boolean] :strip_paragraphs (false) Strip all <p> tags from the HTML before creating the excerpt
     def initialize(text, settings = {})
+      # undo this and change how settings are stored
       @settings = Marshal.load(Marshal.dump(DEFAULTS)).merge(settings)
 
       # make our copy

@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "auto_excerpt"
+require "optparse"
+
+def perr(msg)
+  $stderr.puts(msg)
+end
+
+def dashed(key)
+  key.to_s.gsub('_','-')
+end
+
+@options = {}
+
+options_parser = OptionParser.new do |o|
+  o.banner = "Usage: auto_excerpt [options] STRING|FILE"
+  o.separator ""
+  
+  [
+    :characters,
+    :words,
+    :sentences,
+    :paragraphs,
+    :skip_words,
+    :skip_sentences,
+    :skip_paragraphs
+  ].each do |key|
+    o.on("--#{dashed(key)} N", Integer){ |n|  @options[key] = n }
+  end
+  
+  [
+   :strip_html        ,
+   :strip_breaks_tabs ,
+   :strip_paragraphs
+  ].each do |key|
+    o.on("--#{dashed(key)}"){ |b| @options[key] = b }
+  end
+  
+  o.on("--allowed_tags a,b,c", Array){|allowed| @options[:allowed_tags] = allowed }
+  
+  o.on('--[no-]ending [STRING]'){ |s| @options[:ending] = s || nil }
+  o.on_tail('-h','--help'){ puts o; exit }
+end
+
+begin
+  options_parser.parse!(ARGV)
+  string_or_file = ARGV.last
+  raise(ArgumentError, "Please provide a STRING or FILE to parse.") unless string_or_file
+  string_or_file = File.read(string_or_file) if File.exist?(string_or_file)
+  puts AutoExcerpt.new(string_or_file, @options)
+rescue => e
+  perr("Error: #{e.message}\n")
+  perr(e.backtrace)
+  exit(1)
+end
+
+
