@@ -67,8 +67,11 @@ module AutoExcerpt
     alias_method :parse, :create_excerpt
     
     protected
-
+    
+    # @api private
     attr_reader :charcount, :wordcount, :sencount, :pghcount
+    
+    # @api private
     attr_accessor :settings, :body, :excerpt
 
     # close html tags
@@ -96,7 +99,7 @@ module AutoExcerpt
         end      
       end
 
-      @excerpt = [text, @settings[:ending], tagstoclose].compact.join
+      @excerpt = [text, @settings[:ending], tagstoclose].join
     end
     
     def non_excerpted_text

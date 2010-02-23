@@ -5,7 +5,8 @@ require "webrick/htmlutils"
 
 Object.class_eval do
   alias_method :old_pp, :pp
-
+  
+  # so I can inspect the html in TextMate when things get hard to interpret
   def pp(str)
     str = WEBrick::HTMLUtils.escape(str) if str.is_a?(String)
     old_pp(str)
@@ -18,23 +19,21 @@ module AutoExcerptHelpers
   
   
   def html_excerpt(opts = {})
-   AutoExcerpt.new(HTML_BLOCK, opts)
+   AutoExcerpt::Parser.new(HTML_BLOCK, opts).parse
   end
 
   def normal_excerpt(opts = {})
-   AutoExcerpt.new(NORMAL_TEXT, opts)
+   AutoExcerpt::Parser.new(NORMAL_TEXT, opts).parse
   end
 
   def heavy_excerpt(opts = {})
-   AutoExcerpt.new(HEAVY_HTML_BLOCK, opts)
+   AutoExcerpt::Parser.new(HEAVY_HTML_BLOCK, opts).parse
   end
 
   def stripped_text(t)
    t.gsub(/<[^>]*(>+|\s*\z)/m, "")
   end
-    
-  CRAP_HTML = ""
-  
+      
   NORMAL_TEXT = %{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

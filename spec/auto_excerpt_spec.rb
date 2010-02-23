@@ -4,6 +4,14 @@ require File.join(File.dirname(__FILE__), *%w[shared strip_html_spec])
 # I definitely need more tests
 describe AutoExcerpt do
   
+  it { should respond_to(:new) }
+  
+  it "should return a string" do
+    AutoExcerpt.new("foo bar").should be_instance_of(String)
+  end
+end
+
+describe AutoExcerpt::Parser do
   it "should limit characters" do
    text = html_excerpt({:characters => 5, :ending => nil})
    stripped_text(text).length.should eql(5)
@@ -18,13 +26,13 @@ describe AutoExcerpt do
   end
 
   it "does not include html tags or entities in character count" do
-    AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}).should == "<h1>Hello</h1>"
-    AutoExcerpt.new("<h1>Copyright &copy; 2010</h1>", {:characters => 11, :ending => nil}).should == "<h1>Copyright &copy;</h1>"
+    AutoExcerpt::Parser.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}).parse.should == "<h1>Hello</h1>"
+    AutoExcerpt::Parser.new("<h1>Copyright &copy; 2010</h1>", {:characters => 11, :ending => nil}).parse.should == "<h1>Copyright &copy;</h1>"
   end
   
   it "should not cutoff in the middle of a word" do
-    AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 4, :ending => nil}).should == "<h1>Hello</h1>"
-    AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 7, :ending => nil}).should == "<h1>Hello World</h1>"
+    AutoExcerpt::Parser.new("<h1>Hello World!</h1>", {:characters => 4, :ending => nil}).parse.should == "<h1>Hello</h1>"
+    AutoExcerpt::Parser.new("<h1>Hello World!</h1>", {:characters => 7, :ending => nil}).parse.should == "<h1>Hello World</h1>"
   end
   
   it "should limit words" do
@@ -64,17 +72,17 @@ describe AutoExcerpt do
      <br />crap<b>dddd
      <a href="/activity/read_and_frwd/1251?type=comment">(Open)</a>
    }
-   text = AutoExcerpt.new(t,{:characters => 270})
+   text = AutoExcerpt::Parser.new(t,{:characters => 270}).parse
    text.match(/(<(\/|)b>)/).captures.length.should eql(2)
   end
+
+  describe "when stripping HTML" do
   
+    it_should_behave_like "an HTML stripper"
+  
+    it "should not strip P tags if :paragraphs option is set" do
+      AutoExcerpt::Parser.new("<p>this is a paragraph.</p><p>this is also a paragraph.</p>",{:paragraphs => 1, :strip_html => true}).parse.should eql("<p>this is a paragraph.</p>")
+    end
+  end  
 end
 
-describe AutoExcerpt, "when stripping HTML" do
-  
-  it_should_behave_like "an HTML stripper"
-  
-  it "should not strip P tags if :paragraphs option is set" do
-    AutoExcerpt.new("<p>this is a paragraph.</p><p>this is also a paragraph.</p>",{:paragraphs => 1, :strip_html => true}).should eql("<p>this is a paragraph.</p>")
-  end
-end
