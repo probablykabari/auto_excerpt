@@ -17,6 +17,9 @@ require File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt])
 
 module AutoExcerptHelpers
   
+  def auto_excerpt(html, opts = {})
+    AutoExcerpt.new(html, opts)
+  end
   
   def html_excerpt(opts = {})
    AutoExcerpt::Parser.new(HTML_BLOCK, opts).parse

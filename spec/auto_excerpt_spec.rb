@@ -9,6 +9,52 @@ describe AutoExcerpt do
   it "should return a string" do
     AutoExcerpt.new("foo bar").should be_instance_of(String)
   end
+  
+  describe "via bash" do
+    before(:all) do
+      @script = File.expand_path(File.join(File.dirname(__FILE__), *%w[.. bin auto_excerpt]))
+      @html = AutoExcerptHelpers::HEAVY_HTML_BLOCK
+      @file_path = File.join(File.dirname(__FILE__), *%w[test_file.html])
+      File.open(@file_path, 'w'){|f| f.write(@html) }
+    end
+    
+    after(:all) do
+      FileUtils.rm(@file_path)
+    end
+    
+    AutoExcerpt::Parser::DEFAULTS.each_pair{ |k,v|
+      v = v.is_a?(Array) ? %w(p br span) : v
+      o = {k => v}
+      it "passes options correctly: '#{o.inspect}'" do
+        `#{@script} #{convert_options(o)} #{@file_path}`.chomp.should == AutoExcerpt.new(@html, o)
+      end
+    }
+    
+    it "blows up when no STRING or FILE is passed" do
+      system("#{@script} --words 10 'this is a string' &> /dev/null").should be(true)
+      system("#{@script} --words 10 &> /dev/null").should be(false)
+    end
+    
+    def dashed(str)
+      str.gsub('_','-')
+    end
+    
+    def convert_options(opts)
+      opt_string = ""
+      opts.each_pair do |key,val|
+        v = case val
+        when Array; val.join(','); break
+        when TrueClass,FalseClass; nil; break
+        else val.to_s
+        end
+        
+        opt_string << "--#{dashed(key.to_s)} "
+        (opt_string << v) if v
+        opt_string << ' '
+      end
+      opt_string
+    end
+  end
 end
 
 describe AutoExcerpt::Parser do

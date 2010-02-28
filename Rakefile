@@ -6,14 +6,19 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "auto_excerpt"
-    gemspec.summary = "Create excerpts from html formatted text."
-    gemspec.description = "Create excerpts from html formatted text. HTML tags are automatically closed."
+    gemspec.summary = "Validly shorten HTML formatted text."
+    gemspec.description = "Create excerpts from html formatted text. HTML tags are automatically closed and html is kept valid."
     gemspec.email = "kabari@gmail.com"
-    gemspec.homepage = "http://github.com/kabari/auto_excerpt"
+    gemspec.homepage = "http://kabari.github.com/auto_excerpt"
     gemspec.authors = ["Kabari Hendrick"]
     
     gemspec.add_development_dependency "rspec", ">= 1.2.9"
     gemspec.add_development_dependency "yard", ">= 0"
+    gem.files = FileList["lib/**/*.rb",
+                         "README.textile",
+                         "LICENSE",
+                         "VERSION",
+                         "CHANGELOG"]
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
