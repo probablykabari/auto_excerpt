@@ -1,17 +1,17 @@
 module AutoExcerpt
   # TODO allow for default options to be set.
-  class Parser  
+  class Parser
     DEFAULTS = {
        :characters        => 0,
        :words             => 0,
-       :sentences         => 0, 
+       :sentences         => 0,
        :paragraphs        => 0,
        # :skip_characters => 0,
        :skip_words        => 0,
        :skip_sentences    => 0,
        :skip_paragraphs   => 0,
        :ending            => '...',
-       :strip_html        => false, 
+       :strip_html        => false,
        :allowed_tags      => [],
        :strip_breaks_tabs => false,
        :strip_paragraphs  => false
@@ -19,7 +19,7 @@ module AutoExcerpt
 
     PUNCTUATION_MARKS = /\!\s|\.\s|\?\s/
     # tags that do not have opposite closing tags
-    NO_CLOSE          = %w( br hr img input ) 
+    NO_CLOSE          = %w( br hr img input )
     OPENING_TAG       = /<([a-z0-9]{1,})\b[^>]*>/im
     CLOSING_TAG       = /<\/([a-z0-9]{1,})>/im
 
@@ -46,7 +46,7 @@ module AutoExcerpt
 
       if @settings[:strip_html]
         (@settings[:allowed_tags] << "p") if @settings[:paragraphs] > 0 # don't stip P tags if that is the limiter
-        @body = strip_html(@body) 
+        @body = strip_html(@body)
       end
       @body = clean(@body) if @settings[:strip_breaks_tabs]
       # TODO replace this with better regex
@@ -62,16 +62,16 @@ module AutoExcerpt
       return characters unless @settings[:characters].zero?
       return words      unless @settings[:words].zero?
       return sentences  unless @settings[:sentences].zero?
-      return paragraphs unless @settings[:paragraphs].zero?  
+      return paragraphs unless @settings[:paragraphs].zero?
     end
-    
+
     alias_method :parse, :create_excerpt
-    
+
     protected
-    
+
     # @api private
     attr_reader :charcount, :wordcount, :sencount, :pghcount
-    
+
     # @api private
     attr_accessor :settings, :body, :excerpt
 
@@ -97,12 +97,12 @@ module AutoExcerpt
 
         tags.each do |tag|
           tagstoclose << "</#{tag.strip.downcase}>" unless NO_CLOSE.include?(tag)
-        end      
+        end
       end
 
       @excerpt = [text, @settings[:ending], tagstoclose].join
     end
-    
+
     def non_excerpted_text
       @settings[:ending] = nil
       close_tags(@body)
@@ -126,7 +126,7 @@ module AutoExcerpt
           }
         end
         break if (char_count >= @settings[:characters])
-      end 
+      end
       text = clean(@body[0...(html_count+char_count)])
       close_tags(text)
     end
@@ -154,12 +154,12 @@ module AutoExcerpt
       text = text.join("</p>")
       close_tags(text)
     end
-    
+
     # remove all double-spaces, tabs, and new lines from string
     def clean(str)
       str.strip.gsub(/\s{2,}|[\n\r\t]/, ' ')
     end
-    
+
     # Removes HTML tags from a string. Allows you to specify some tags to be kept.
     # @see http://codesnippets.joyent.com/posts/show/1354#comment-293
     def strip_html(html)

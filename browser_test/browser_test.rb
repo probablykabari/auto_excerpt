@@ -1,8 +1,8 @@
-# 
-# This is a small Sinatra app to test that the html created by the excerpt 
+#
+# This is a small Sinatra app to test that the html created by the excerpt
 # is valid. It was the easiest way to test if all the tags
 # were really closed or not.
-# 
+#
 require "rubygems"
 require "sinatra"
 require File.expand_path(File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt]))
@@ -46,7 +46,7 @@ __END__
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 	<title>Testing AutoExcerpt Class</title>
-	
+
 </head>
 
 <body>

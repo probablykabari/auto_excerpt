@@ -11,7 +11,7 @@ begin
     gemspec.email = "kabari@gmail.com"
     gemspec.homepage = "http://kabari.github.com/auto_excerpt"
     gemspec.authors = ["Kabari Hendrick"]
-    
+
     gemspec.add_development_dependency "rspec", ">= 1.2.9"
     gemspec.add_development_dependency "yard", ">= 0"
     gem.files = FileList["lib/**/*.rb",
