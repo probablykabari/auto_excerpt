@@ -5,7 +5,7 @@ require "webrick/htmlutils"
 
 Object.class_eval do
   alias_method :old_pp, :pp
-  
+
   # so I can inspect the html in TextMate when things get hard to interpret
   def pp(str)
     str = WEBrick::HTMLUtils.escape(str) if str.is_a?(String)
@@ -16,11 +16,11 @@ end
 require File.join(File.dirname(__FILE__), *%w[.. lib auto_excerpt])
 
 module AutoExcerptHelpers
-  
+
   def auto_excerpt(html, opts = {})
     AutoExcerpt.new(html, opts)
   end
-  
+
   def html_excerpt(opts = {})
    AutoExcerpt::Parser.new(HTML_BLOCK, opts).parse
   end
@@ -36,20 +36,20 @@ module AutoExcerptHelpers
   def stripped_text(t)
    t.gsub(/<[^>]*(>+|\s*\z)/m, "")
   end
-      
+
   NORMAL_TEXT = %{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    
+
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     }
-    
+
   HTML_BLOCK = <<-HTML
   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <strong>incididunt</strong> ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
-  
+
   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
   HTML
- 
+
   HEAVY_HTML_BLOCK = %Q{
   <p>Alright&hellip;ok&hellip;that title is a bold faced lie. I don&rsquo;t give a damn about <acronym title="Cascading Style Sheets">CSS</acronym> validation! Being a designer for a living, you have to know when to ditch some of these &lsquo;web 2.0&rsquo; type fads. When you&rsquo;re building a new site it&rsquo;s great to use the validation tool <a href="http://jigsaw.w3.org/css-validator/">found here</a> to review your style sheets and get rid of any errors, especially ones that may be giving you a couple layout problems. After that, the validation service doesn&rsquo;t mean about how good your <span class="caps">CSS</span> is, or how special you are, or how valid your stuff is. It is <strong>not</strong> at all the same as validating your <acronym title="hypertext markup language">HTML</acronym> or <acronym title="extensible hypertext markup language">XHTML</acronym>; style sheets don&rsquo;t have DOCTYPE&rsquo;s. </p>
 

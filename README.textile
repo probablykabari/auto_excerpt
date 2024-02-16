@@ -5,7 +5,7 @@ pre. [sudo] gem install auto_excerpt
 
 Creates excerpts of html formatted text.
 
-pre. AutoExcerpt.new("<span>This is <strong>some</strong> fancy html formatted text homie</span>", {:words => 5}) 
+pre. AutoExcerpt.new("<span>This is <strong>some</strong> fancy html formatted text homie</span>", {:words => 5})
     #   => "<span>This is <strong>some</strong> fancy html...</span>"
 
 h3. Features
@@ -24,7 +24,7 @@ Default: 150 (does not need to be set to 0 if you choose another option)
 
 _If you need to be 100% accurate in your character count, then remove the @:ending@_
 
-pre. AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil}) 
+pre. AutoExcerpt.new("<h1>Hello World!</h1>", {:characters => 5, :ending => nil})
      # => <h1>Hello</h1>
 
 @:words@, @:sentences@, @:paragraphs@
@@ -36,7 +36,7 @@ Default: "..."
 
 pre. AutoExcerpt.new("This is cool stuff man!", :ending => ". Srsly!", :words => 3)
     # => "This is cool. Srsly!"
-    
+
 @:strip_html@
 Strips HTML tags from the excerpt that is displayed.
 Default: false
